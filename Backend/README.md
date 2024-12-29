@@ -79,3 +79,144 @@ Example:
 ### Notes:
 - The `password` field is hashed before being stored in the database.
 - A JWT token is generated and returned upon successful registration.
+
+## Endpoint: `/user/login`
+
+### Method: POST
+
+### Description:
+This endpoint is used to log in an existing user. It requires the user's email and password.
+
+### Request Body:
+The request body should be a JSON object containing the following fields:
+- `email`: A string representing the user's email (must be a valid email address).
+- `password`: A string representing the user's password (minimum 6 characters).
+
+Example:
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+### Responses: 
+
+#### Success:
+- **Status Code:** 200 OK
+- **Response Body:**
+  ```json
+  {
+    "token": "jwt_token_here",
+    "user": {
+      "_id": "user_id_here",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com"
+    }
+  }
+  ```
+
+#### Validation Errors:
+- **Status Code:** 400 Bad Request
+- **Response Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message here",
+        "param": "field_name",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+#### Invalid Credentials:
+- **Status Code:** 401 Unauthorized
+- **Response Body:**
+  ```json
+  {
+    "message": "Invalid email or password"
+  }
+  ```
+
+### Notes:
+- The `password` field is compared with the hashed password stored in the database.
+- A JWT token is generated and returned upon successful login.
+
+## Endpoint: `/user/profile`
+
+### Method: GET
+
+### Description:
+This endpoint is used to get the profile of the authenticated user.
+
+### Request Headers:
+- `Authorization`: A string containing the JWT token in the format `Bearer <token>`.
+
+### Responses: 
+
+#### Success:
+- **Status Code:** 200 OK
+- **Response Body:**
+  ```json
+  {
+    "user": {
+      "_id": "user_id_here",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com"
+    }
+  }
+  ```
+
+#### Unauthorized:
+- **Status Code:** 401 Unauthorized
+- **Response Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+### Notes:
+- The user must be authenticated to access this endpoint.
+
+## Endpoint: `/user/logout`
+
+### Method: GET
+
+### Description:
+This endpoint is used to log out the authenticated user.
+
+### Request Headers:
+- `Authorization`: A string containing the JWT token in the format `Bearer <token>`.
+
+### Responses: 
+
+#### Success:
+- **Status Code:** 200 OK
+- **Response Body:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+#### Unauthorized:
+- **Status Code:** 401 Unauthorized
+- **Response Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+### Notes:
+- The user must be authenticated to access this endpoint.
+- The token is added to the blacklist upon successful logout.
