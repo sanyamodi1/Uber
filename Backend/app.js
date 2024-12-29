@@ -31,7 +31,7 @@ const cookieParser = require('cookie-parser');
 const connectToDB = require('./db/db');
 // Import user-related routes
 const userRoutes = require('./routes/user.routes');
-
+const captainRoutes = require('./routes/captain.routes');
 
 // Connect to the database
 connectToDB();
@@ -50,5 +50,6 @@ app.get("/", (req, res) => {
 }); 
 // Mount user routes on the /users path
 app.use('/users', userRoutes);
+app.use('/captains', captainRoutes);
 // Export the app for use in server.js
 module.exports = app;

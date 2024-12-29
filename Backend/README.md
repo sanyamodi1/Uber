@@ -220,3 +220,95 @@ This endpoint is used to log out the authenticated user.
 ### Notes:
 - The user must be authenticated to access this endpoint.
 - The token is added to the blacklist upon successful logout.
+# Captain Registration Endpoint Documentation
+
+## Endpoint: `/captains/register`
+
+### Method: POST
+
+### Description:
+This endpoint is used to register a new captain. It requires the captain's first name, last name, email, password, and vehicle details.
+
+### Request Body:
+The request body should be a JSON object containing the following fields:
+- `fullname`: An object containing:
+  - `firstname`: A string representing the captain's first name (minimum 3 characters).
+  - `lastname`: A string representing the captain's last name (optional).
+- `email`: A string representing the captain's email (must be a valid email address).
+- `password`: A string representing the captain's password (minimum 6 characters).
+- `vehicle`: An object containing:
+  - `color`: A string representing the vehicle's color (minimum 3 characters).
+  - `plate`: A string representing the vehicle's plate (minimum 3 characters).
+  - `capacity`: An integer representing the vehicle's capacity (minimum 1).
+  - `type`: A string representing the vehicle's type (must be one of `['car', 'auto', 'motorcycle']`).
+
+Example:
+```json
+{
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "password123",
+  "vehicle": {
+    "color": "red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "type": "car"
+  }
+}
+```
+
+### Responses: 
+
+#### Success:
+- **Status Code:** 201 Created
+- **Response Body:**
+  ```json
+  {
+    "token": "jwt_token_here",
+    "captain": {
+      "_id": "captain_id_here",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "vehicle": {
+        "color": "red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "type": "car"
+      }
+    }
+  }
+  ```
+
+#### Validation Errors:
+- **Status Code:** 400 Bad Request
+- **Response Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message here",
+        "param": "field_name",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+#### Captain Already Registered:
+- **Status Code:** 400 Bad Request
+- **Response Body:**
+  ```json
+  {
+    "message": "Captain already registered"
+  }
+  ```
+
+### Notes:
+- The `password` field is hashed before being stored in the database.
+- A JWT token is generated and returned upon successful registration.
